@@ -10,17 +10,20 @@ for t=1:Time_steps
     %%    
        
     while iter<max_iter/2 && residue>min_residue
+
         tau_wall_D = abs(u(2,1)-u(1,1))/dzc(1);                 %Tau wall down
         tau_wall_U = abs(u(end,1)-u(end-1,1))/dzc(end);         %Tau wall up
         u_star_U = sqrt(tau_wall_U*nu_c);              %U star up
         u_star_D = sqrt(tau_wall_D*nu_c);                  %U star down
         y_plus_D = zc(1:end).*u_star_D./nu_c;             %y star down
         %y_plus_U = (H-zc(1:end)* (bcswitch==0) ).*u_star_U./nu_c; %y star up
-        y_plus_U = (H-zc(1:end)).*u_star_U./nu_c; %y star up
+        y_plus_U = (H-zc(1:end)).*u_star_U./nu_c; %y star 
+       
         %Van Driest Damping
         if Van_Driest_Damping_on == 1
             Van_Driest_A = 26;
             Van_Driest_function = zeros(1,length(l));
+
             if bcswitch == 0
                 Van_Driest_function = (1-exp(-abs(min(y_plus_D,y_plus_U))/Van_Driest_A));
             elseif bcswitch == 1
@@ -32,6 +35,7 @@ for t=1:Time_steps
             l2 = Von_Karman*flip(zc).*Van_Driest_function;
             l3 = (bcswitch==0)*min(l1,l2)+(bcswitch==1)*l1+(bcswitch==3)*l2;
             l4 = Karman_0*Boundary_Layer_Size*ones(1,length(l)); 
+
             l_effective = min(l3,l4);
         end
         
