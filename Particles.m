@@ -2,14 +2,15 @@ rng(1)
 tic
 clearvars -except l_effective u mu nu Delta_t Steady_State_on zc Time_steps Nz rho dz
 %% Properties of Particles
-Np = 10;                 % Number of Particles
+Np = 1000;                 % Number of Particles
 np = 1000;              % 1 particle represents np particles
 Dp = 5e-5;              % Diameter of Particle
 Vp = 4/3*pi*(Dp/2)^3;   % Volume particle
 rho_p = 2000;           % Density of particle
 mu = mean(mu);
+H_chimney = 100;
 %% rain
-rain_on = 1;        % 1 on, 0 off
+rain_on = 0;        % 1 on, 0 off
 Nd = 1;                %Number of druppels
 nd = 1000;              %1Nd Represents nd particles
 Dd = 1e-3;              %Diameter of druppel, range 5e-4 -> 5e-3
@@ -86,7 +87,7 @@ sub_method_2 = 3;       % Only need to use if speed_up_method = 2, if this
 
 if speed_up == 1
     Original_Time_steps_for_particles = Time_steps_for_particles;
-    Time_steps_for_particles = 1000;
+    Time_steps_for_particles = 200;
     mod_6 = -log(5*Dp); % Constante nodig voor speed_up_method == 6
 end
 
@@ -110,7 +111,7 @@ Yp = Xp;
 Zp = Xp;
 Xp(:,1) = 0 + randn(Np,1);   % X start position of particles
 Yp(:,1) = 0 + randn(Np,1);   % Y start position of particles
-Zp(:,1) = 50 + randn(Np,1);   % Z start position of particles
+Zp(:,1) = H_chimney + randn(Np,1);   % Z start position of particles
 Vpx = zeros(Np,Time_steps_2+1);   % X velocity
 Vpy = Vpx;                      % Y velocity
 Vpz = Vpx;                      % Z velocity
@@ -280,7 +281,7 @@ for t=1:Time_steps_2
     Time(t+1) = t*Delta_t;
     toc
 end
-name = ['rain_' num2str(rain_on) '_dust_particles_diameter_' num2str(Dp) '_dust_particles_number_' num2str(Np) '_rain_particles_' num2str(Nd) '_Delta_t_' num2str(Delta_t) '_Delta_t_of_particles_' num2str(Delta_Time_for_particles)];
+name = ['rain_' num2str(rain_on) '_dust_particles_diameter_' num2str(Dp) '_dust_particles_number_' num2str(Np) '_rain_particles_' num2str(Nd) '_Delta_t_' num2str(Delta_t) '_Delta_t_of_particles_' num2str(Delta_Time_for_particles) '_H_' num2str(H_chimney)];
 save name
 %distance = mean(mean_min_distance)
 %collisions = sum(sum(Collision))
